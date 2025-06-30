@@ -19,3 +19,4 @@ class ApiError extends Error{                    //handle the error of the apis
     }
 }
 }
+export { ApiError };
