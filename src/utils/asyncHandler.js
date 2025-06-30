@@ -16,4 +16,4 @@ const asyncHandler = (fn)=>{
 //     }
 // }                        //callback help a function inside another function 
 
-export default asyncHandler;
+export {asyncHandler};
