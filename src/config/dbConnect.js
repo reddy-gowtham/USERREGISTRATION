@@ -1,6 +1,6 @@
 //in this we write how we can connect via database
 import mongoose from "mongoose";
-import {DB_NAME} from "../const.js"
+import {DB_NAME} from "../const.js";
 
 export const ConnectDB = async()=>{       //async need to be written inside a function
 try{

@@ -4,12 +4,12 @@ import fs from "fs";
 
     // Configuration
     cloudinary.config({ 
-        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-        api_key: process.env.CLOUDINARY_API_KEY,
-        api_secret: process.env.CLOUDINARY_API_SECRET
+        cloud_name: "GowthamReddy",
+        api_key: 449998329723929,
+        api_secret: "RyCTuy3zjN3cKe5DOfH_ElvwqNQ"
     });
 
-    const uploadOncloudinary= async (localFilePath)=>{
+    const uploadOnCloudinary= async (localFilePath)=>{
         try {
             if(!localFilePath) return null;
             cloudinary.uploader.upload(localFilePath,{
@@ -21,7 +21,7 @@ import fs from "fs";
         }
     }
 
-    export { uploadOncloudinary }
+    export { uploadOnCloudinary }
     //  const uploadResult = await cloudinary.uploader
     //    .upload(
     //        'https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg', {
