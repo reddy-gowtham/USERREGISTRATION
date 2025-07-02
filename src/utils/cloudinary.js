@@ -4,17 +4,18 @@ import fs from "fs";
 
     // Configuration
     cloudinary.config({ 
-        cloud_name: "GowthamReddy",
-        api_key: 449998329723929,
+        cloud_name: "daueioqeq",
+        api_key: "449998329723929",
         api_secret: "RyCTuy3zjN3cKe5DOfH_ElvwqNQ"
     });
 
     const uploadOnCloudinary= async (localFilePath)=>{
         try {
             if(!localFilePath) return null;
-            cloudinary.uploader.upload(localFilePath,{
+         const response =  cloudinary.uploader.upload(localFilePath,{
                 resource_type:"auto"
             })
+            return response
         } catch (error) {
             fs.unlinkSync(localFilePath)
             return null;

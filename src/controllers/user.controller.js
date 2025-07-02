@@ -18,7 +18,7 @@ const generateAccessAndRefreshToken = async(userId)=>{
      user.save({validateBeforeSave: false });
      return{ accessToken, refreshToken};
    } catch (error) {
-    throw new ApiError(500,"Somthing went wrong while generating access and refresh token")
+    throw new ApiError(500,"Somthing went wrong while generating access and refresh token");
    }
 };
 
@@ -35,7 +35,7 @@ const registerUser = asyncHandler(async (req, res) => {
   // remove password, refresh token
   // check user creation
   // return res
-  console.log(req.body)
+  //console.log(req.body)
 
   const { username, fullName, email, password } = req.body
   console.log("username: ", username);
@@ -47,7 +47,7 @@ const registerUser = asyncHandler(async (req, res) => {
     if ([username, email, fullName, password].some(
         (field) => ( field?.trim() === "" )
     )) {
-        throw new ApiError(400, "All fields are required")
+        throw new ApiError(400, "All fields are required");
     }
 
   const existedUser = await User.findOne({
@@ -96,26 +96,26 @@ const registerUser = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async(req,res)=>{
     //req body -> data
-const {email, username,password} = req.body
+const {email, username, password} = req.body;
 console.log("email",email);
 
     //username or email validate
     if(!username && !email){
-        throw new ApiError(400, "username or email is required")
+        throw new ApiError(400, "username or email is required");
     }
     //find the user
    const user = await User.findById({
-        $or:[{email,username}]
-    })
+        $or:[{email,username}],
+    });
     if(!user){
-        throw new ApiError(404,"User dosen't exist")
+        throw new ApiError(404,"User dosen't exist");
     }
     //password
-const isPasswordValid  = await User.isPasswordCorrect(password)
+const isPasswordValid  = await user.isPasswordCorrect(password)
 if(!isPasswordValid){
     throw new ApiError(401, "Invalid user credintials")
 }
-console.log(isPasswordValid);
+//console.log(isPasswordValid);
     //access and refresh token
 const {accessToken,refreshToken} =  await generateAccessAndRefreshToken(user._id)
 const loggedInUser = await User.findById(user._id).select("-password -refreshToken")
@@ -130,15 +130,32 @@ const loggedInUser = await User.findById(user._id).select("-password -refreshTok
     .cookie("accessToken", accessToken, options)
     .cookie("refreshtoken",refreshToken,options)
     .json(
-        new ApiResponse(200,{user: loggedInUser, accessToken,refreshToken},
+        new ApiResponse(200,{loggedInUser, accessToken,refreshToken},
         "User Logged In successfully")
     )
 });
 
 const logoutUser = asyncHandler(async(req,res)=>{
 User.findByIdAndUpdate(
-  req.user
+  req.user._id,{
+    $unset:{
+      refreshToken: undefined || 1
+    }
+  },
+  {
+    new:true
+  }
 )
+const options = {
+  httpOnly: true,
+  secure: true
+}
+return res
+.status(201)
+.clearCookie("accessToken",options)
+.clearCookie("refreshToken",options)
+.json(new ApiResponse(401, ""))
+
 })
 export { registerUser,
     loginUser, logoutUser};

@@ -14,18 +14,18 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true,
-        index: true
+        index: true,
     },
     email: {
         type: String,
         required: true,
         unique: true,
-        trim: true,
-        lowercase: true
+        lowercase: true,
+        trim:true,
     },
     avatar: {
         type: String,
-        required: true
+        required: true,
     },
     coverImage: {
         type: String,
@@ -42,13 +42,13 @@ const userSchema = new mongoose.Schema({
         Timestamps: true,
     }
 );
-userSchema.pre("save", async function () {
+userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
     this.password = await bcrypt.hash(this.password, 10)
     next();
 })
-userSchema.methods.isPasswordCorrect = async function () {
-    await bcrypt.compare(password, this.password)
+userSchema.methods.isPasswordCorrect = async function (password) {
+    return await bcrypt.compare(password, this.password)
 }
 
 
